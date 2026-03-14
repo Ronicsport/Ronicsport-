@@ -1,0 +1,1404 @@
+Code
+
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ELITE COACH">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELITE COACH — Programme 12 Semaines</title>
+
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #181818;
+    --surface3: #222222;
+    --accent: #e8ff00;
+    --accent2: #ff4d00;
+    --accent3: #00d4ff;
+    --text: #f0f0f0;
+    --text-muted: #666;
+    --text-dim: #999;
+    --border: #2a2a2a;
+    --success: #00e676;
+    --warning: #ffab00;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* HEADER */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 56px;
+  }
+  .logo { font-family: 'Impact', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif; font-weight:900; letter-spacing:2px; font-size: 26px; color: var(--accent); letter-spacing: 3px; }
+  .header-sub { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
+  .header-week {
+    margin-left: auto;
+    background: var(--accent);
+    color: #000;
+    font-family: 'Courier New', 'Menlo', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 2px;
+  }
+  /* NAV */
+  .nav {
+    display: flex;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  /* PAGES */
+  .page { display: none; padding: 20px; max-width: 700px; margin: 0 auto; }
+  .page.active { display: block; }
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-family: 'Impact', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif; font-weight:900; letter-spacing:2px;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-title .icon { font-size: 18px; }
+  /* STATS ROW */
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  .stat-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .stat-val { font-family: 'Impact', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif; font-weight:900; letter-spacing:2px; font-size: 28px; color: var(--accent); }
+  .stat-unit { font-size: 11px; color: var(--text-muted); }
+  .stat-lbl { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+  .badge-accent { background: var(--accent); color: #000; }
+  .badge-red { background: var(--accent2); color: #fff; }
+  .badge-blue { background: var(--accent3); color: #000; }
+  .badge-green { background: var(--success); color: #000; }
+  .badge-warn { background: var(--warning); color: #000; }
+  /* EXERCISE TABLE */
+  .ex-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .ex-table th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 8px 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ex-table td { padding: 10px 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .ex-table tr:last-child td { border-bottom: none; }
+  .ex-name { font-weight: 600; color: var(--text); }
+  .ex-note { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+  /* INPUTS */
+  .input-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+  .mini-input {
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text);
+    font-family: 'Courier New', 'Menlo', monospace;
+    font-size: 13px;
+    padding: 6px 10px;
+    width: 70px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+  .mini-input:focus { outline: none; border-color: var(--accent); }
+  .mini-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .save-btn {
+    background: var(--accent);
+    border: none;
+    color: #000;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+  .save-btn:hover { opacity: 0.85; }
+  .save-btn.saved { background: var(--success); }
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'Impact', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif; font-weight:900; letter-spacing:2px;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin: 20px 0 10px;
+  }
+  /* SUPPS */
+  .supp-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .supp-item:last-child { border-bottom: none; }
+  .supp-icon { font-size: 22px; flex-shrink: 0; }
+  .supp-name { font-weight: 700; font-size: 14px; margin-bottom: 3px; }
+  .supp-timing { font-size: 12px; color: var(--text-muted); }
+  /* PROGRESS BAR */
+  .prog-bar-wrap { background: var(--surface3); border-radius: 2px; height: 6px; margin-top: 8px; overflow: hidden; }
+  .prog-bar { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.5s; }
+  /* ALERT BOX */
+  .alert {
+    border-left: 3px solid var(--accent2);
+    background: rgba(255,77,0,0.08);
+    padding: 12px 14px;
+    border-radius: 0 4px 4px 0;
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  .alert.info { border-color: var(--accent3); background: rgba(0,212,255,0.06); }
+  .alert.success { border-color: var(--success); background: rgba(0,230,118,0.06); }
+  /* MACRO GRID */
+  .macro-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .macro-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px 8px;
+    text-align: center;
+  }
+  .macro-val { font-family: 'Impact', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif; font-weight:900; letter-spacing:2px; font-size: 26px; }
+  .macro-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  /* WEEK SELECTOR */
+  .week-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+  .week-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-muted);
+    font-family: 'Courier New', 'Menlo', monospace;
+    font-size: 12px;
+    padding: 10px 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .week-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .week-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
+  .week-btn.done { border-color: var(--success); color: var(--success); }
+  /* PHASE TAG */
+  .phase-tag {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 2px;
+    color: var(--text-dim);
+  }
+  /* DAY SELECTOR */
+  .day-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .day-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-muted);
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .day-btn:hover { border-color: var(--accent); color: var(--text); }
+  .day-btn.active { background: var(--surface3); border-color: var(--accent); color: var(--accent); }
+  /* NUTRITION LOG */
+  .meal-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .meal-name { font-weight: 600; min-width: 120px; font-size: 14px; }
+  .meal-kcal { font-family: 'Courier New', 'Menlo', monospace; font-size: 13px; color: var(--accent); }
+  /* TOGGLE */
+  .toggle-section { cursor: pointer; user-select: none; }
+  .toggle-section .arrow { transition: transform 0.2s; display: inline-block; margin-left: 8px; font-size: 12px; }
+  .toggle-section.open .arrow { transform: rotate(90deg); }
+  .toggle-content { display: none; }
+  .toggle-content.open { display: block; }
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  /* TABS inside card */
+  .inner-tabs { display: flex; gap: 4px; margin-bottom: 14px; }
+  .inner-tab {
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .inner-tab.active { background: var(--accent); color: #000; border-color: var(--accent); }
+  .inner-panel { display: none; }
+  .inner-panel.active { display: block; }
+  /* HR */
+  hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+  p { font-size: 13px; color: var(--text-dim); line-height: 1.7; }
+  strong { color: var(--text); }
+  ul { list-style: none; }
+  ul li { font-size: 13px; color: var(--text-dim); padding: 4px 0; padding-left: 16px; position: relative; }
+  ul li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 11px; }
+  .highlight { color: var(--accent); font-weight: 700; }
+  /* TIMER */
+  .timer-display {
+    font-family: 'Impact', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif; font-weight:900; letter-spacing:2px;
+    font-size: 72px;
+    color: var(--accent);
+    text-align: center;
+    letter-spacing: 4px;
+    line-height: 1;
+  }
+  .timer-btn {
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 4px;
+  }
+  .timer-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .timer-btn.start { background: var(--accent); color: #000; border-color: var(--accent); }
+  @media (max-width: 480px) {
+    .stats-row { grid-template-columns: repeat(3, 1fr); }
+    .macro-grid { grid-template-columns: repeat(2, 1fr); }
+    .week-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>
+
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">ELITE COACH</div>
+    <div class="header-sub">Programme 12 Semaines</div>
+  </div>
+  <div class="header-week" id="headerWeek">S1 — J1</div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showPage('dashboard', this)">Dashboard</button>
+  <button class="nav-btn" onclick="showPage('workout', this)">Séance</button>
+  <button class="nav-btn" onclick="showPage('nutrition', this)">Nutrition</button>
+  <button class="nav-btn" onclick="showPage('supplements', this)">Supps</button>
+  <button class="nav-btn" onclick="showPage('progress', this)">Progrès</button>
+  <button class="nav-btn" onclick="showPage('mobility', this)">Mobilité</button>
+  <button class="nav-btn" onclick="showPage('timer', this)">Timer</button>
+</div>
+
+<!-- ========== DASHBOARD ========== -->
+
+<div class="page active" id="page-dashboard">
+
+  <div class="alert info" style="margin-top:4px">
+    <strong>🔥 Ton profil :</strong> 29 ans · 1m84 · 91 kg · ~22-25% BF · Ex-footballeur national · Taxi 10-12h/j · Reprise 2 semaines
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="stat-val" id="dash-weight">91</div>
+      <div class="stat-unit">kg</div>
+      <div class="stat-lbl">Poids</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val" id="dash-bf">23</div>
+      <div class="stat-unit">%</div>
+      <div class="stat-lbl">BF est.</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val" id="dash-sessions">2</div>
+      <div class="stat-unit">/ 4</div>
+      <div class="stat-lbl">Séances S1</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📊</span> Progression 12 Semaines</div>
+    <div id="weekProgressBars"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🎯</span> Analyse Personnalisée</div>
+    <div class="alert success">
+      <strong>Bonne nouvelle :</strong> Tu vas progresser TRÈS vite. La mémoire musculaire d'un ex-footballeur de niveau national entre 13-18 ans est un avantage énorme.
+    </div>
+    <ul>
+      <li><strong>Muscle memory :</strong> Tes fibres musculaires "se souviennent". Attends-toi à +2-3 kg de masse maigre en 8 semaines.</li>
+      <li><strong>Perte de graisse réaliste :</strong> 0,5 à 0,7 kg/semaine en déficit contrôlé → <strong class="highlight">-4 à -6 kg de graisse en 8 sem.</strong></li>
+      <li><strong>Risques taxi :</strong> Posture voûtée, lombaires comprimées, épaules en antépulsion → warm-up obligatoire.</li>
+      <li><strong>Priorité absolue :</strong> Technique parfaite. Pas de kipping. Scapulas verrouillées sur chaque traction.</li>
+      <li><strong>Objectif S12 :</strong> 82-84 kg, 14-16% BF, 10 tractions strictes, pecs/dos/bras visibles.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📅</span> Planning Semaine Type</div>
+    <table class="ex-table">
+      <thead><tr><th>Jour</th><th>Séance</th><th>Durée</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-accent">MAR</span></td><td><span class="ex-name">JAMBES + FESSIERS</span><div class="ex-note">Déjà fait cette semaine ✓</div></td><td>60 min</td></tr>
+        <tr><td><span class="badge badge-red">JEU</span></td><td><span class="ex-name">BRAS + ÉPAULES</span><div class="ex-note">Déjà fait cette semaine ✓</div></td><td>55 min</td></tr>
+        <tr><td><span class="badge badge-blue">SAM</span></td><td><span class="ex-name">DOS + ÉPAULES</span><div class="ex-note">← Aujourd'hui 🔥</div></td><td>60 min</td></tr>
+        <tr><td><span class="badge badge-warn">LUN</span></td><td><span class="ex-name">PECTORAUX + TRICEPS</span><div class="ex-note">Semaine prochaine</div></td><td>55 min</td></tr>
+        <tr><td style="color:var(--text-muted)">MER/VEN/DIM</td><td style="color:var(--text-muted)">REPOS ACTIF</td><td style="color:var(--text-muted)">10 min mobilité</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ========== WORKOUT ========== -->
+
+<div class="page" id="page-workout">
+
+  <div class="section-title">Sélectionner la semaine</div>
+  <div class="week-grid" id="weekGrid"></div>
+
+  <div class="section-title">Sélectionner la séance</div>
+  <div class="day-row" id="dayRow"></div>
+
+  <div id="workoutContent"></div>
+
+</div>
+
+<!-- ========== NUTRITION ========== -->
+
+<div class="page" id="page-nutrition">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🔢</span> Tes Besoins Caloriques</div>
+    <div class="alert info">
+      <strong>TDEE calculé :</strong> Taxi (sédentaire) + 4 séances/sem = ~2850 kcal/jour<br>
+      <strong>Déficit contrôlé :</strong> -500 kcal = <span class="highlight">2350 kcal/jour</span>
+    </div>
+    <div class="macro-grid">
+      <div class="macro-box">
+        <div class="macro-val" style="color:var(--accent2)">200</div>
+        <div class="macro-lbl">Protéines (g)</div>
+      </div>
+      <div class="macro-box">
+        <div class="macro-val" style="color:var(--accent3)">235</div>
+        <div class="macro-lbl">Glucides (g)</div>
+      </div>
+      <div class="macro-box">
+        <div class="macro-val" style="color:var(--warning)">65</div>
+        <div class="macro-lbl">Lipides (g)</div>
+      </div>
+      <div class="macro-box">
+        <div class="macro-val" style="color:var(--success)">2350</div>
+        <div class="macro-lbl">kcal/jour</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🍽️</span> Journée Type (Taxi-Friendly)</div>
+
+```
+<div class="meal-row">
+  <div class="meal-name">☀️ Réveil (7h)</div>
+  <div style="flex:1; font-size:13px; color:var(--text-dim)">4 œufs brouillés + 2 tartines complètes + 1 banane + café</div>
+  <div class="meal-kcal">~600</div>
+</div>
+<div class="meal-row">
+  <div class="meal-name">🚗 En route (10h)</div>
+  <div style="flex:1; font-size:13px; color:var(--text-dim)">Shaker protéiné + poignée d'amandes + 1 pomme</div>
+  <div class="meal-kcal">~350</div>
+</div>
+<div class="meal-row">
+  <div class="meal-name">🥗 Midi (13h)</div>
+  <div style="flex:1; font-size:13px; color:var(--text-dim)">150g poulet/thon + 100g riz cuit + légumes + huile olive</div>
+  <div class="meal-kcal">~550</div>
+</div>
+<div class="meal-row">
+  <div class="meal-name">🚗 Goûter (16h)</div>
+  <div style="flex:1; font-size:13px; color:var(--text-dim)">Yaourt grec 0% + 30g flocons d'avoine + 1 fruit</div>
+  <div class="meal-kcal">~280</div>
+</div>
+<div class="meal-row">
+  <div class="meal-name">💪 Pré-séance (si soir)</div>
+  <div style="flex:1; font-size:13px; color:var(--text-dim)">Créatine (5g) + banane ou pain de mie complet</div>
+  <div class="meal-kcal">~150</div>
+</div>
+<div class="meal-row">
+  <div class="meal-name">🌙 Dîner (20h)</div>
+  <div style="flex:1; font-size:13px; color:var(--text-dim)">200g viande maigre/poisson + patate douce + brocolis</div>
+  <div class="meal-kcal">~550</div>
+</div>
+<div class="meal-row">
+  <div class="meal-name">🥛 Post-séance/soir</div>
+  <div style="flex:1; font-size:13px; color:var(--text-dim)">Shaker whey 30g + eau</div>
+  <div class="meal-kcal">~150</div>
+</div>
+<div style="text-align:right; margin-top:10px; font-family:'Space Mono', monospace; font-size:14px; color:var(--accent)">
+  TOTAL : ~2630 kcal ✓
+</div>
+```
+
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">💡</span> Astuces Taxi</div>
+    <ul>
+      <li><strong>Tupperware x2 :</strong> Prépare 2 repas solides la veille au soir (max 15 min de prep).</li>
+      <li><strong>Shaker toujours dans le taxi :</strong> 30g whey + eau = collation parfaite sans frigo.</li>
+      <li><strong>Évite fast-food :</strong> Si obligé → poulet grillé + salade (pas de frites).</li>
+      <li><strong>2L d'eau minimum :</strong> Surtout avec créatine, hydratation = performance.</li>
+      <li><strong>Repos caloriques :</strong> Les jours sans séance, -100 kcal (2250 kcal).</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ========== SUPPLEMENTS ========== -->
+
+<div class="page" id="page-supplements">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">⚗️</span> Protocole Suppléments</div>
+
+```
+<div class="supp-item">
+  <div class="supp-icon">🌿</div>
+  <div>
+    <div class="supp-name">ASHWAGANDHA (Wawa / KSM-66) <span class="badge badge-green">Indispensable</span></div>
+    <div class="supp-timing">
+      <strong>Dose :</strong> 600 mg/jour (1 gélule le matin + 1 le soir si 300mg/caps)<br>
+      <strong>Timing :</strong> Matin avec le petit-dej + soir avec le dîner<br>
+      <strong>Pourquoi :</strong> Réduit le cortisol (hormone du stress taxi 🚗), améliore la récupération, boost testostérone naturelle (+17%), améliore la qualité du sommeil<br>
+      <strong>Cycle :</strong> 8 semaines ON → 4 semaines OFF<br>
+      <strong>Attention :</strong> Ne pas prendre à jeun si estomac sensible. Effets ressentis après 2-4 semaines.
+    </div>
+  </div>
+</div>
+
+<div class="supp-item">
+  <div class="supp-icon">⚡</div>
+  <div>
+    <div class="supp-name">CRÉATINE MONOHYDRATE <span class="badge badge-accent">Essentiel</span></div>
+    <div class="supp-timing">
+      <strong>Dose :</strong> 5g/jour, TOUS LES JOURS (même les jours de repos)<br>
+      <strong>Timing :</strong> De préférence post-séance avec glucides. Jours de repos : matin avec le dej<br>
+      <strong>Phase de charge (optionnelle) :</strong> 20g/jour × 5-7 jours pour saturer plus vite (4x5g dans la journée)<br>
+      <strong>Pourquoi :</strong> +5-10% de force, récupération ATP plus rapide, légère prise de masse cellulaire (+1-2kg eau intramusculaire)<br>
+      <strong>Important :</strong> BOIRE 2,5-3L d'eau/jour obligatoire. La créatine attire l'eau dans les muscles.<br>
+      <strong>Effets :</strong> Ressentis dès 1-2 semaines (si charge) ou 3-4 semaines (sans charge)
+    </div>
+  </div>
+</div>
+
+<div class="supp-item">
+  <div class="supp-icon">🥛</div>
+  <div>
+    <div class="supp-name">WHEY PROTÉINE <span class="badge badge-blue">Recommandé</span></div>
+    <div class="supp-timing">
+      <strong>Dose :</strong> 1-2 shakers de 30g/jour selon apport alimentaire<br>
+      <strong>Timing :</strong> Post-séance (30 min après) + collation si manque de protéines<br>
+      <strong>But :</strong> Atteindre les 200g de protéines/jour facilement<br>
+      <strong>Choix :</strong> Whey isolate si sensible au lactose. Whey concentrate sinon.
+    </div>
+  </div>
+</div>
+
+<div class="supp-item">
+  <div class="supp-icon">☀️</div>
+  <div>
+    <div class="supp-name">VITAMINE D3 + K2 <span class="badge badge-warn">Optionnel</span></div>
+    <div class="supp-timing">
+      <strong>Dose :</strong> 2000-4000 UI D3 + 100mcg K2 le matin<br>
+      <strong>Pourquoi :</strong> Taxi = peu de soleil. Déficience très fréquente → impact direct sur testostérone, immunité et récupération.
+    </div>
+  </div>
+</div>
+
+<div class="supp-item">
+  <div class="supp-icon">🐟</div>
+  <div>
+    <div class="supp-name">OMÉGA 3 <span class="badge badge-warn">Optionnel</span></div>
+    <div class="supp-timing">
+      <strong>Dose :</strong> 2-3g EPA/DHA par jour avec les repas<br>
+      <strong>Pourquoi :</strong> Anti-inflammatoire naturel, protège les articulations (coudes, épaules), améliore focus et récupération.
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📋</span> Routine Journalière Supps</div>
+    <table class="ex-table">
+      <thead><tr><th>Moment</th><th>Supp</th><th>Dose</th></tr></thead>
+      <tbody>
+        <tr><td>Réveil</td><td>Ashwagandha + Vitamine D3+K2</td><td>600mg + 2000UI</td></tr>
+        <tr><td>Pré-séance (-30min)</td><td>Créatine + Glucides rapides</td><td>5g + banane</td></tr>
+        <tr><td>Post-séance (+30min)</td><td>Whey + Créatine (si pas pris)</td><td>30g + 5g</td></tr>
+        <tr><td>Soir (dîner)</td><td>Ashwagandha + Oméga 3</td><td>600mg + 2g</td></tr>
+        <tr><td>Repos (sans séance)</td><td>Créatine le matin</td><td>5g</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ========== PROGRESS ========== -->
+
+<div class="page" id="page-progress">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📈</span> Suivi Performances Clés</div>
+
+```
+<div class="section-title">Tractions strictes (max reps)</div>
+<div id="pullupTracker"></div>
+
+<div class="section-title" style="margin-top:20px">Dips (max reps)</div>
+<div id="dipsTracker"></div>
+
+<div class="section-title" style="margin-top:20px">Pompes (max reps)</div>
+<div id="pushupsTracker"></div>
+```
+
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">⚖️</span> Suivi Morpho</div>
+    <div id="morphoTracker"></div>
+    <div class="alert info" style="margin-top:12px">
+      <strong>Objectifs S12 :</strong> ~83 kg · ~15% BF · Tour taille -8cm · 10+ tractions strictes
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📸</span> Guide Photos</div>
+    <ul>
+      <li>Photo tous les <strong>lundis matin</strong>, à jeun, même lumière.</li>
+      <li>3 angles : <strong>face, profil, dos</strong>.</li>
+      <li>Même tenue, même endroit → comparaison objective.</li>
+      <li>Ne te pèse pas tous les jours → fluctuations normales de ±1.5kg.</li>
+      <li>Fais confiance au miroir + aux performances + aux mensurations.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">⚠️</span> Signes de Surmenage</div>
+    <div class="alert">
+      Si tu ressens 2+ de ces signes → RÉDUIRE VOLUME 30% cette semaine :
+    </div>
+    <ul>
+      <li>Performances qui baissent 2 séances de suite</li>
+      <li>Douleur articulaire (différent de DOMS musculaire)</li>
+      <li>Sommeil perturbé, irritabilité</li>
+      <li>Fréquence cardiaque repos +10 bpm</li>
+      <li>Manque total de motivation</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ========== MOBILITY ========== -->
+
+<div class="page" id="page-mobility">
+
+  <div class="alert info" style="margin-top:4px">
+    <strong>10-12 min obligatoires</strong> chaque matin + avant chaque séance (warm-up spécifique). Crucial pour toi en tant que chauffeur.
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🌅</span> Routine Matin (10 min)</div>
+    <table class="ex-table">
+      <thead><tr><th>Exercice</th><th>Durée/Reps</th><th>Focus</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="ex-name">Cat-Cow (4 pattes)</span><div class="ex-note">Dos en arche + dos rond, lentement</div></td>
+          <td>10 reps</td><td>Colonne</td>
+        </tr>
+        <tr>
+          <td><span class="ex-name">Hip Circles</span><div class="ex-note">Debout, cercles des hanches ×2 sens</div></td>
+          <td>10 × 2</td><td>Hanches</td>
+        </tr>
+        <tr>
+          <td><span class="ex-name">Shoulder Circles</span><div class="ex-note">Bras tendus, grands cercles</div></td>
+          <td>10 × 2 sens</td><td>Épaules</td>
+        </tr>
+        <tr>
+          <td><span class="ex-name">Wrist Rotations + Extensions</span><div class="ex-note">Poignets en cercle + étirement doigts</div></td>
+          <td>30 sec</td><td>Poignets</td>
+        </tr>
+        <tr>
+          <td><span class="ex-name">Thoracic Spine Rotation</span><div class="ex-note">Assis ou 4 pattes, rotation thorax</div></td>
+          <td>8 × 2 côtés</td><td>Dos haut</td>
+        </tr>
+        <tr>
+          <td><span class="ex-name">Hip Flexor Stretch (fente)</span><div class="ex-note">Genou au sol, hanches vers l'avant</div></td>
+          <td>30 sec × 2</td><td>Flexion hanche</td>
+        </tr>
+        <tr>
+          <td><span class="ex-name">Scapular Retractions</span><div class="ex-note">Omoplates → serrées → relâchées</div></td>
+          <td>15 reps</td><td>Posture dos</td>
+        </tr>
+        <tr>
+          <td><span class="ex-name">Dead Hang Passif</span><div class="ex-note">Suspension 20-30 sec à la barre</div></td>
+          <td>2 × 20-30s</td><td>Décompression</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🔥</span> Warm-Up Avant Séance (8 min)</div>
+    <table class="ex-table">
+      <thead><tr><th>Exercice</th><th>Séries</th><th>But</th></tr></thead>
+      <tbody>
+        <tr><td><span class="ex-name">Jumping Jacks / Step-Jacks</span><div class="ex-note">Élever température corporelle</div></td><td>2 × 30 sec</td><td>Cardio activation</td></tr>
+        <tr><td><span class="ex-name">Band Pull-Aparts (ou serviette)</span><div class="ex-note">Serrer les omoplates avec bande</div></td><td>2 × 15</td><td>Épaules / posture</td></tr>
+        <tr><td><span class="ex-name">Dead Hang actif</span><div class="ex-note">Activer les scapulas en bas de barre</div></td><td>2 × 15-20s</td><td>Prise + dos</td></tr>
+        <tr><td><span class="ex-name">Pike Push-up vide</span><div class="ex-note">Très lent, tempo 3-0-3</div></td><td>1 × 8</td><td>Épaules</td></tr>
+        <tr><td><span class="ex-name">Negative Pull-up lente</span><div class="ex-note">Descente en 5 sec, pas de montée</div></td><td>1 × 3-5</td><td>Tractions prep</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🛡️</span> Protection Coudes & Poignets</div>
+    <ul>
+      <li><strong>Avant dips :</strong> Toujours faire 20 cercles de poignets + flex/extension des coudes.</li>
+      <li><strong>Dips au début :</strong> Amplitude réduite (90°), pas de chute totale des épaules.</li>
+      <li><strong>Tractions :</strong> Jamais de kipping. Descente COMPLÈTE et CONTRÔLÉE.</li>
+      <li><strong>Repos coudes :</strong> Si douleur (pas tiraillement musculaire) → arrêt immédiat.</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ========== TIMER ========== -->
+
+<div class="page" id="page-timer">
+
+  <div class="card">
+    <div class="card-title"><span class="icon">⏱️</span> Timer de Repos</div>
+    <div class="timer-display" id="timerDisplay">01:30</div>
+    <div style="text-align:center; margin: 16px 0;">
+      <button class="timer-btn start" onclick="startTimer()">▶ START</button>
+      <button class="timer-btn" onclick="pauseTimer()">⏸ PAUSE</button>
+      <button class="timer-btn" onclick="resetTimer()">↺ RESET</button>
+    </div>
+    <div style="text-align:center; margin-bottom:14px">
+      <div class="section-title" style="margin-bottom:8px">Temps de repos rapide</div>
+      <button class="timer-btn" onclick="setTimer(60)">1 min</button>
+      <button class="timer-btn" onclick="setTimer(90)">1:30</button>
+      <button class="timer-btn" onclick="setTimer(120)">2 min</button>
+      <button class="timer-btn" onclick="setTimer(180)">3 min</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">😤</span> Gainage & Respiration</div>
+    <div class="alert info">
+      Technique obligatoire pour protéger ton dos de taxi sur TOUS les exercices debout/suspendu :
+    </div>
+    <ul>
+      <li><strong>Avant chaque série :</strong> Inspire profondément → rentre le ventre → contracte les abdos fort.</li>
+      <li><strong>Pendant l'effort :</strong> Expire en poussant (pompes, dips) ou en tirant (tractions).</li>
+      <li><strong>Pas de blocage :</strong> Ne bloque jamais ta respiration sur des reps faciles.</li>
+      <li><strong>Lombaires :</strong> Toujours légère lordose naturelle, jamais voûté sous charge.</li>
+      <li><strong>Dead hang :</strong> Relâche tout, décompresse la colonne 20-30s entre les séries de tractions.</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+// ===================== DATA =====================
+const program = {
+  weeks: 12,
+  phases: [
+    { name: "FONDATIONS", weeks: [1,2,3,4], color: "#e8ff00" },
+    { name: "CONSTRUCTION", weeks: [5,6,7,8], color: "#ff4d00" },
+    { name: "INTENSIFICATION", weeks: [9,10,11,12], color: "#00d4ff" }
+  ],
+  sessions: {
+    "DOS + ÉPAULES": {
+      desc: "🔥 SÉANCE DU JOUR — Dos large + épaules rondes. Machines + poids libres. Perte de graisse maximale avec volume musculaire.",
+      warmup: "5 min vélo/tapis léger + rotations épaules 2×10 + tirages poulie haute légers 2×15 + rotations poignets 30s",
+      exercises: [
+        {
+          name: "TIRAGE VERTICAL POULIE HAUTE — Prise large",
+          sets: "4", reps: "10-12", tempo: "3-1-2", rest: "90s",
+          note: "🏋️ MACHINE CÂBLE. Assis face à la poulie, barre large en pronation. Tire vers le haut de la poitrine en serrant les omoplates. Dos légèrement incliné. | ✅ Variante salle : Machine lat pulldown | ✅ Variante poids libres : Tractions assistées avec élastique épais | 🎯 Muscles : Grand dorsal, grand rond, biceps"
+        },
+        {
+          name: "ROWING BARRE BUSTE PENCHÉ",
+          sets: "4", reps: "8-10", tempo: "3-1-2", rest: "90s",
+          note: "🏋️ BARRE + DISQUES. Dos à 45°, barre en pronation, tirer vers le nombril en serrant les coudes le long du corps. Dos plat obligatoire. | ✅ Variante machine : Rowing machine assise (chest support) | ✅ Variante haltères : Rowing 1 bras haltère — genou + main sur banc | 🎯 Muscles : Trapèze moyen, rhomboïdes, grand dorsal"
+        },
+        {
+          name: "ROWING POULIE BASSE ASSIS — Prise serrée",
+          sets: "3", reps: "12-15", tempo: "2-1-3", rest: "75s",
+          note: "🏋️ MACHINE CÂBLE. Assis, poignée V serrée, tirer vers le nombril. Coudes le long du corps. Contrôle TOTAL sur la phase de retour (3 sec). | ✅ Variante : Rowing machine assise prise serrée | ✅ Variante haltères : Rowing 2 haltères simultanés buste penché | 🎯 Muscles : Dos entier, biceps, érecteurs"
+        },
+        {
+          name: "DÉVELOPPÉ ÉPAULES HALTÈRES ASSIS",
+          sets: "4", reps: "10-12", tempo: "3-1-2", rest: "90s",
+          note: "🏋️ HALTÈRES. Assis sur banc droit, haltères à hauteur des épaules, pousser verticalement. Coudes à 45° devant, pas sur les côtés. | ✅ Variante machine : Machine shoulder press | ✅ Variante barre : Développé militaire barre devant | 🎯 Muscles : Deltoïde antérieur + médial, triceps"
+        },
+        {
+          name: "ÉLÉVATIONS LATÉRALES HALTÈRES",
+          sets: "3", reps: "15-20", tempo: "2-0-3", rest: "60s",
+          note: "🏋️ HALTÈRES légers (5-10 kg). Debout, lever les bras sur les côtés jusqu'à l'horizontale. Pouces légèrement vers le bas. JAMAIS au-dessus des épaules. | ✅ Variante câble : Élévation latérale poulie basse 1 bras | ✅ Variante machine : Machine élévations latérales | 🎯 Muscles : Deltoïde médial = épaules larges"
+        },
+        {
+          name: "OISEAU — ÉLÉVATIONS ARRIÈRE HALTÈRES",
+          sets: "3", reps: "15-20", tempo: "2-1-3", rest: "60s",
+          note: "🏋️ HALTÈRES. Assis buste penché à 90°, bras pendants, lever latéralement en arc. Coudes légèrement fléchis. | ✅ Variante câble : Face pull poulie haute — tirer vers le visage, coudes hauts 🛡️ ANTI-BLESSURE | ✅ Variante machine : Pec deck inversé | 🎯 Muscles : Deltoïde postérieur, rhomboïdes, coiffe des rotateurs"
+        },
+        {
+          name: "GAINAGE ABDOMINAL — PLANCHE AVANT-BRAS",
+          sets: "4", reps: "30-45 sec", tempo: "", rest: "45s",
+          note: "💪 POIDS DU CORPS. Avant-bras au sol, corps rigide, abdos contractés. Fessiers ni en l'air ni qui s'affaissent. | ✅ Variante débutant : Sur les genoux | ✅ Variante avancée : Planche avec élévation de jambe alternée | 🎯 Muscles : Transverse, obliques, érecteurs spinaux"
+        },
+      ]
+    },
+    "PECTORAUX + TRICEPS": {
+      desc: "💪 Pectoraux épais et hauts + triceps massifs. Séance push complète en musculation salle. Brûle un maximum de calories avec les gros mouvements.",
+      warmup: "5 min vélo + rotations épaules 2×10 + pompes légères 2×10 + échauffement barre vide 1×15",
+      exercises: [
+        {
+          name: "DÉVELOPPÉ COUCHÉ BARRE — Prise standard",
+          sets: "4", reps: "8-12", tempo: "3-1-2", rest: "2min",
+          note: "🏋️ BARRE + DISQUES sur banc plat. Prise légèrement plus large que les épaules. Descendre la barre jusqu'à la poitrine (pause légère), pousser explosif. Coudes à 45° — jamais à 90°. | ✅ Variante haltères : Développé couché haltères (meilleur pour amplitude) | ✅ Variante machine : Chest press machine (sécurité maximale) | 🎯 Muscles : Pectoraux, deltoïde antérieur, triceps"
+        },
+        {
+          name: "DÉVELOPPÉ INCLINÉ HALTÈRES — 30-45°",
+          sets: "4", reps: "10-12", tempo: "3-1-2", rest: "90s",
+          note: "🏋️ HALTÈRES sur banc incliné 30°. Descendre les haltères jusqu'à hauteur des pectoraux hauts, pousser en arc. Plus efficace qu'incliné barre pour l'amplitude. | ✅ Variante barre : Développé incliné barre | ✅ Variante machine : Machine inclinée ou câble incliné | 🎯 Muscles : Pectoraux hauts (claviculaires), épaules"
+        },
+        {
+          name: "ÉCARTé CÂBLES CROISÉS — Poulie haute",
+          sets: "3", reps: "12-15", tempo: "2-1-3", rest: "75s",
+          note: "🏋️ CÂBLES. Debout au centre, 2 poignées poulie haute, croiser les bras vers le bas en arc. Coudes légèrement fléchis, contraction forte au centre. | ✅ Variante haltères : Écarté couché haltères sur banc plat | ✅ Variante machine : Pec deck (butterfly machine) | 🎯 Muscles : Pectoraux (contraction isolée), striation pecs"
+        },
+        {
+          name: "DIPS AUX BARRES PARALLÈLES",
+          sets: "3", reps: "8-12", tempo: "3-1-2", rest: "90s",
+          note: "💪 POIDS DU CORPS (ou machine assistée). Corps légèrement penché en avant pour cibler les pecs. Descendre à 90° MAX. Coudes ni trop écartés ni trop serrés. | ✅ Variante débutant : Machine dips assistée (contrepoids) | ✅ Variante avancée : Dips lestés avec ceinture | 🎯 Muscles : Pectoraux bas, triceps, épaules"
+        },
+        {
+          name: "EXTENSION TRICEPS POULIE HAUTE — Corde",
+          sets: "4", reps: "12-15", tempo: "2-1-3", rest: "60s",
+          note: "🏋️ CÂBLE + CORDE. Debout face à la poulie, coudes collés au corps (ne bougent PAS), pousser la corde vers le bas en écartant les mains en fin de mouvement. | ✅ Variante barre : Triceps barre droite ou EZ poulie haute | ✅ Variante haltères : Extension triceps couché (skull crusher) | 🎯 Muscles : Triceps (3 chefs), isolation"
+        },
+        {
+          name: "DÉVELOPPÉ SERRÉ HALTÈRES — Prise neutre",
+          sets: "3", reps: "10-12", tempo: "3-0-2", rest: "75s",
+          note: "🏋️ HALTÈRES sur banc plat, paumes en pronation, coudes serrés contre le corps. Descendre lentement, pousser fort. | ✅ Variante barre : Développé couché prise serrée | ✅ Variante machine : Machine triceps assis | 🎯 Muscles : Triceps + pectoraux internes"
+        },
+        {
+          name: "CRUNCH MACHINE OU CRUNCH AU SOL",
+          sets: "4", reps: "15-20", tempo: "2-1-2", rest: "45s",
+          note: "🏋️ MACHINE ABDOS ou sol. Contraction abdominale complète, expiration en fin de mouvement. Pas de tirage nuque. | ✅ Variante câble : Crunch poulie haute à genoux | ✅ Variante sol : Crunch classique, jambes à 90° | 🎯 Muscles : Droit abdominal, obliques"
+        },
+      ]
+    },
+    "JAMBES + FESSIERS": {
+      desc: "🦵 Le groupe musculaire le plus volumineux = le plus brûle-graisse. Squats, presse, leg curl. Séance clé pour la perte de poids.",
+      warmup: "10 min vélo moyen intensité + 2×10 squats légers + 2×15 extensions jambes légères",
+      exercises: [
+        {
+          name: "SQUAT BARRE GUIDÉE — Hack Squat ou Smith",
+          sets: "4", reps: "10-12", tempo: "3-1-2", rest: "2min",
+          note: "🏋️ SMITH MACHINE ou HACK SQUAT. Pieds largeur épaules, pointes légèrement tournées. Descendre jusqu'à cuisse parallèle au sol. Dos droit, genoux dans l'axe. | ✅ Variante barre libre : Squat barre libre si technique maîtrisée | ✅ Variante débutant : Goblet squat haltère | 🎯 Muscles : Quadriceps, fessiers, ischio-jambiers — brûle ÉNORMÉMENT de calories"
+        },
+        {
+          name: "PRESSE À CUISSES — Machine inclinée",
+          sets: "4", reps: "12-15", tempo: "3-1-2", rest: "90s",
+          note: "🏋️ MACHINE LEG PRESS. Pieds écartés largeur épaules, pointes à 30°. Ne verrouille jamais les genoux en haut. Descendre jusqu'à 90° maxi. | ✅ Pieds hauts : Plus de fessiers | ✅ Pieds bas : Plus de quadriceps | 🎯 Muscles : Quadriceps, fessiers, ischios — meilleure sécurité lombaire"
+        },
+        {
+          name: "FENTE MARCHÉE HALTÈRES",
+          sets: "3", reps: "10/jambe", tempo: "3-1-2", rest: "90s",
+          note: "🏋️ HALTÈRES dans chaque main. Grand pas en avant, genou arrière vers le sol sans toucher. Genou avant dans l'axe du pied. Alterner les jambes. | ✅ Variante machine : Fente Smith machine | ✅ Variante débutant : Fente sur place sans haltères | 🎯 Muscles : Quadriceps, fessiers, stabilisateurs"
+        },
+        {
+          name: "CURL JAMBES COUCHÉ — Machine ischio",
+          sets: "4", reps: "12-15", tempo: "2-1-3", rest: "75s",
+          note: "🏋️ MACHINE LEG CURL couché. Jambes tendues au départ, fléchir jusqu'à 90-120°. Phase de retour LENTE (3 sec). Hanches plaquées sur la machine. | ✅ Variante assis : Machine leg curl assise | ✅ Variante poids libres : Pont fessier une jambe (glute bridge unilatéral) | 🎯 Muscles : Ischio-jambiers, mollets"
+        },
+        {
+          name: "EXTENSION QUADRICEPS — Machine",
+          sets: "3", reps: "15-20", tempo: "2-1-3", rest: "60s",
+          note: "🏋️ MACHINE LEG EXTENSION. Assis, étendre les jambes jusqu'à presque horizontal. PAUSE 1 sec en haut. Contrôle total en descendant. Charge modérée — isolation. | ✅ Variante : Squat une jambe léger (pistol aidé) | 🎯 Muscles : Quadriceps, isolation complète vaste médial"
+        },
+        {
+          name: "MOLLETS À LA MACHINE OU DEBOUT",
+          sets: "4", reps: "15-20", tempo: "2-1-3", rest: "60s",
+          note: "🏋️ MACHINE MOLLETS ou marche d'escalier. Monter le plus haut possible sur la pointe, PAUSE 1 sec, descendre lentement. | ✅ Variante debout : Haltères dans les mains, élévation sur une marche | ✅ Variante assis : Machine mollets assis (soléaire) | 🎯 Muscles : Gastrocnémien, soléaire"
+        },
+        {
+          name: "RELEVÉ DE JAMBES SUSPENDU OU SOL",
+          sets: "4", reps: "12-15", tempo: "2-1-2", rest: "60s",
+          note: "💪 BARRE ou SOL. Suspendu à la barre, lever les genoux vers la poitrine (débutant) ou jambes tendues (avancé). | ✅ Variante sol : Relevé de jambes tendues couché | ✅ Variante machine : Crunch machine | 🎯 Muscles : Bas du ventre, fléchisseurs de hanche, abdominaux"
+        },
+      ]
+    },
+    "DOS + BICEPS": {
+      desc: "💪 Dos dense + biceps sculptés. Tirage lourd + isolation biceps. Séance pull complète avec machines et poids libres.",
+      warmup: "5 min rameur léger + rotations épaules + tirages élastique 2×15",
+      exercises: [
+        {
+          name: "TIRAGE VERTICAL POULIE HAUTE — Prise serrée neutre",
+          sets: "4", reps: "10-12", tempo: "3-1-2", rest: "90s",
+          note: "🏋️ CÂBLE + POIGNÉE V. Prise neutre (paumes en vis-à-vis), tirer vers le haut de la poitrine. Coudes dans l'axe, omoplates à fond en fin de mouvement. | ✅ Variante prise large : Barre lat pulldown prise pronation | ✅ Variante poids libres : Tractions prise serrée neutre | 🎯 Muscles : Grand dorsal, grand rond, biceps brachial"
+        },
+        {
+          name: "ROWING MACHINE ASSISE — Prise large",
+          sets: "4", reps: "10-12", tempo: "3-1-2", rest: "90s",
+          note: "🏋️ MACHINE ROWING CHEST SUPPORT. Poitrine appuyée sur le support, tirer les poignées vers les hanches. Coudes hauts = trapèze. Coudes bas = grand dorsal. | ✅ Variante câble : Rowing poulie basse prise large | ✅ Variante haltères : Rowing 1 bras haltère lourd | 🎯 Muscles : Grand dorsal, trapèze, rhomboïdes"
+        },
+        {
+          name: "TIRAGE HORIZONTAL CÂBLE — Bras tendus (Pullover câble)",
+          sets: "3", reps: "12-15", tempo: "2-1-3", rest: "75s",
+          note: "🏋️ CÂBLE POULIE HAUTE. Debout, bras tendus devant soi, tirer la barre/corde vers les cuisses en gardant les bras tendus. Isolation du grand dorsal pur. | ✅ Variante haltères : Pullover haltère couché sur banc | 🎯 Muscles : Grand dorsal (isolation parfaite), grand rond"
+        },
+        {
+          name: "CURL BARRE EZ — Debout",
+          sets: "4", reps: "10-12", tempo: "2-1-3", rest: "75s",
+          note: "🏋️ BARRE EZ + DISQUES. Debout, coudes fixés contre le corps, fléchir jusqu'au menton. JAMAIS de balancement du dos. Descente LENTE 3 sec. | ✅ Variante haltères : Curl haltères alternés avec supination | ✅ Variante câble : Curl barre câble poulie basse | 🎯 Muscles : Biceps brachial (chef long + court), brachial"
+        },
+        {
+          name: "CURL MARTEAU HALTÈRES — Debout ou assis",
+          sets: "3", reps: "12-15", tempo: "2-1-3", rest: "60s",
+          note: "🏋️ HALTÈRES, prise neutre (paumes face à face). Fléchir alternativement, poignet ne tourne PAS. | ✅ Variante câble : Curl marteau câble poulie basse + corde | 🎯 Muscles : Brachioradial (avant-bras), biceps chef long — donne l'épaisseur des bras"
+        },
+        {
+          name: "CURL PUPITRE HALTÈRE — Isolation",
+          sets: "3", reps: "12-15", tempo: "2-1-3", rest: "60s",
+          note: "🏋️ HALTÈRE sur pupitre à curl (banc Scott). Bras tendu au départ, fléchir jusqu'au bout. JAMAIS de coup de rein. | ✅ Variante machine : Machine curl assis | ✅ Variante câble : Curl câble incliné 1 bras | 🎯 Muscles : Biceps chef court, isolation pic du biceps"
+        },
+        {
+          name: "GAINAGE LATÉRAL — Planche sur le côté",
+          sets: "3", reps: "30-40 sec/côté", tempo: "", rest: "45s",
+          note: "💪 POIDS DU CORPS. Sur l'avant-bras et le bord du pied. Corps aligné, hanches ne tombent pas. | ✅ Variante débutant : Genou au sol | ✅ Variante avancée : Élévation de hanche latérale | 🎯 Muscles : Obliques, transverse, stabilisateurs lombaires"
+        },
+      ]
+    },
+    "BRAS + ÉPAULES": {
+      desc: "🔥 Séance bras + épaules — volume maximal pour les bras visibles et épaules rondes. 100% musculation salle.",
+      warmup: "5 min vélo + rotations bras 2×10 + pompes légères 1×10 + curl léger 1×15",
+      exercises: [
+        {
+          name: "DÉVELOPPÉ MILITAIRE BARRE — Debout",
+          sets: "4", reps: "8-10", tempo: "3-1-2", rest: "2min",
+          note: "🏋️ BARRE + DISQUES. Debout, barre devant le visage, pousser verticalement. Abdos contractés, ne cambre pas le dos. | ✅ Variante haltères : Développé épaules haltères assis (plus stable) | ✅ Variante machine : Machine shoulder press | 🎯 Muscles : Deltoïde antérieur, médial, triceps — épaules denses"
+        },
+        {
+          name: "ÉLÉVATIONS LATÉRALES CÂBLE — 1 bras",
+          sets: "4", reps: "15-20", tempo: "2-1-3", rest: "60s",
+          note: "🏋️ CÂBLE POULIE BASSE. 1 bras à la fois, lever sur le côté jusqu'à l'horizontale. Tension constante > haltères. | ✅ Variante haltères : Élévations latérales haltères debout | ✅ Variante machine : Machine élévations latérales | 🎯 Muscles : Deltoïde médial (épaules larges)"
+        },
+        {
+          name: "TIRAGE MENTON BARRE — Prise large",
+          sets: "3", reps: "12-15", tempo: "2-1-2", rest: "75s",
+          note: "🏋️ BARRE EZ ou DROITE. Debout, tirer la barre le long du corps vers le menton, coudes HAUTS. Prise large = deltoïde. Prise serrée = trapèze. | ✅ Variante câble : Tirage menton poulie basse | 🎯 Muscles : Deltoïde médial, trapèze supérieur ⚠️ Arrêt si douleur épaule"
+        },
+        {
+          name: "CURL BICEPS HALTÈRES ASSIS — Incliné",
+          sets: "4", reps: "10-12", tempo: "2-1-3", rest: "75s",
+          note: "🏋️ HALTÈRES assis sur banc incliné 60°. Bras pendants derrière le corps = amplitude maximale. Fléchir lentement, supiner en montant. | ✅ Variante debout : Curl haltères alternés supination | ✅ Variante câble : Curl câble poulie basse bras tendu | 🎯 Muscles : Biceps chef long, brachial antérieur"
+        },
+        {
+          name: "EXTENSION TRICEPS HALTÈRE — Au-dessus tête",
+          sets: "4", reps: "12-15", tempo: "2-1-3", rest: "75s",
+          note: "🏋️ 1 HALTÈRE à 2 mains au-dessus de la tête. Coudes près des oreilles, descendre l'haltère derrière la nuque. | ✅ Variante câble : Extension triceps câble poulie haute, bras au-dessus tête | ✅ Variante barre : EZ skull crusher couché | 🎯 Muscles : Chef long du triceps (80% du volume du bras)"
+        },
+        {
+          name: "DIPS TRICEPS ENTRE 2 BANCS",
+          sets: "3", reps: "12-15", tempo: "3-1-2", rest: "75s",
+          note: "💪 POIDS DU CORPS. Mains sur le banc derrière, talons sur un autre banc. Corps vertical, descendre en 3 sec. | ✅ Variante machine : Machine dips assistée | ✅ Variante avancée : Dips barres + haltère sur les cuisses | 🎯 Muscles : Triceps (isolation), pectoraux bas"
+        },
+        {
+          name: "ABDOS — CRUNCH CÂBLE À GENOUX",
+          sets: "4", reps: "15-20", tempo: "2-1-2", rest: "45s",
+          note: "🏋️ CÂBLE POULIE HAUTE + CORDE. À genoux, tirer la corde vers les genoux en contractant les abdos fort. | ✅ Variante sol : Crunch classique + rotation pour obliques | ✅ Variante machine : Machine abdos | 🎯 Muscles : Droit abdominal, obliques sous tension"
+        },
+      ]
+    }
+  }
+};
+
+// Weekly progression modifiers
+const weekMods = {
+  1: { sets: 0, note: "Semaine 1 — Technique parfaite. Charge légère. Apprendre les mouvements." },
+  2: { sets: 0, note: "Semaine 2 — Même volume. Ajouter 1-2 reps si facile. Focus qualité." },
+  3: { sets: 1, note: "Semaine 3 — +1 série sur exercice principal. Commencer à sentir la fatigue." },
+  4: { sets: 0, note: "Semaine 4 — DELOAD. -30% volume. Récupération active. Corps se reconstruit." },
+  5: { sets: 1, note: "Semaine 5 — Phase 2. Tempo plus lent. +charge si possible. Intensité ↑" },
+  6: { sets: 1, note: "Semaine 6 — Début tractions assistées → strictes si prêt. Push vers la limite." },
+  7: { sets: 2, note: "Semaine 7 — Volume maximal phase 2. Peut-être 1-3 tractions strictes." },
+  8: { sets: 0, note: "Semaine 8 — DELOAD. Photos avant/après. Évaluation complète." },
+  9: { sets: 1, note: "Semaine 9 — Phase 3. Introduction anneaux si disponibles. Skills basiques." },
+  10: { sets: 1, note: "Semaine 10 — Densité ↑ (moins de repos). Complexes possibles." },
+  11: { sets: 2, note: "Semaine 11 — Peak volume. Ceinture lestée si 10+ tractions." },
+  12: { sets: 0, note: "Semaine 12 — Test max. Photos finales. Bilan complet. Planifier phase 4." }
+};
+
+const dayOrder = ["DOS + ÉPAULES", "PECTORAUX + TRICEPS", "JAMBES + FESSIERS", "DOS + BICEPS", "BRAS + ÉPAULES"];
+
+// ===================== STATE =====================
+let state = {
+  currentWeek: 1,
+  currentDay: "DOS + ÉPAULES",
+  logs: {},
+  morpho: [],
+  pullups: [],
+  dips: [],
+  pushups: []
+};
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('eliteCoachState');
+    if (s) { const parsed = JSON.parse(s); if (parsed && typeof parsed === 'object') state = parsed; }
+  } catch(e) { console.log('load error:', e); }
+}
+
+function saveState() {
+  try {
+    const json = JSON.stringify(state);
+    localStorage.setItem('eliteCoachState', json);
+  } catch(e) {
+    console.log('save error:', e);
+  }
+}
+
+// ===================== NAV =====================
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  var pg = document.getElementById('page-' + id);
+  if (pg) pg.classList.add('active');
+  if (btn) btn.classList.add('active');
+  else { var found = document.querySelector('.nb-' + id); if(found) found.classList.add('active'); }
+}
+
+// ===================== WEEK GRID =====================
+function renderWeekGrid() {
+  const grid = document.getElementById('weekGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  for (let w = 1; w <= 12; w++) {
+    const phase = program.phases.find(p => p.weeks.includes(w));
+    const btn = document.createElement('div');
+    btn.className = 'week-btn' + (w === state.currentWeek ? ' active' : '');
+    btn.innerHTML = `S${w}<div class="phase-tag" style="color:${phase.color}; font-size:8px; margin-top:2px">${phase.name.substring(0,4)}</div>`;
+    btn.onclick = () => selectWeek(w);
+    grid.appendChild(btn);
+  }
+}
+
+function selectWeek(w) {
+  state.currentWeek = w;
+  saveState();
+  renderWeekGrid();
+  renderDayRow();
+  renderWorkout();
+  document.getElementById('headerWeek').textContent = `S${w} — ${state.currentDay.split(' ')[0]}`;
+}
+
+// ===================== DAY ROW =====================
+function renderDayRow() {
+  const row = document.getElementById('dayRow');
+  if (!row) return;
+  row.innerHTML = '';
+  dayOrder.forEach(day => {
+    const btn = document.createElement('button');
+    btn.className = 'day-btn' + (day === state.currentDay ? ' active' : '');
+    btn.textContent = day;
+    btn.onclick = () => selectDay(day);
+    row.appendChild(btn);
+  });
+}
+
+function selectDay(day) {
+  state.currentDay = day;
+  saveState();
+  renderDayRow();
+  renderWorkout();
+}
+
+// ===================== WORKOUT RENDER =====================
+function renderWorkout() {
+  const container = document.getElementById('workoutContent');
+  if (!container) return;
+  const session = program.sessions[state.currentDay];
+  if (!session) return;
+  const mod = weekMods[state.currentWeek];
+  const phase = program.phases.find(p => p.weeks.includes(state.currentWeek));
+
+  let html = `
+    <div class="card">
+      <div class="card-title">
+        <span class="icon">💪</span> S${state.currentWeek} — ${state.currentDay}
+        <span class="badge" style="background:${phase.color};color:#000;margin-left:auto">${phase.name}</span>
+      </div>
+      <p style="margin-bottom:10px">${session.desc}</p>
+      <div class="alert info"><strong>Note semaine :</strong> ${mod.note}</div>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:14px">
+        <strong style="color:var(--accent2)">🔥 WARM-UP :</strong> ${session.warmup}
+      </div>
+  `;
+
+  session.exercises.forEach((ex, idx) => {
+    const logKey = `S${state.currentWeek}_${state.currentDay}_ex${idx}`;
+    const log = state.logs[logKey] || {};
+    const setsNum = parseInt(ex.sets) + (idx === 0 ? mod.sets : 0);
+    
+    html += `
+      <div style="padding: 12px 0; border-bottom: 1px solid var(--border);">
+        <div style="display:flex; align-items:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:8px">
+          <div style="flex:1; min-width:180px">
+            <div class="ex-name" style="font-size:14px">${ex.name}</div>
+            <div class="ex-note">${ex.note}</div>
+          </div>
+          <div style="text-align:right; flex-shrink:0">
+            <div style="font-family:'Courier New','Menlo',monospace; font-size:13px; color:var(--accent)">${setsNum}×${ex.reps}</div>
+            ${ex.tempo ? `<div style="font-size:10px;color:var(--text-muted)">Tempo: ${ex.tempo}</div>` : ''}
+            <div style="font-size:10px;color:var(--text-muted)">Repos: ${ex.rest}</div>
+          </div>
+        </div>
+        <div class="input-row" style="flex-wrap:wrap">
+          <div>
+            <div class="mini-label">Reps</div>
+            <input class="mini-input" type="number" min="0" max="100" value="${log.reps || ''}" placeholder="—" id="reps_${logKey}" style="width:60px">
+          </div>
+          <div>
+            <div class="mini-label">Charge (kg)</div>
+            <input class="mini-input" type="number" min="0" max="300" step="0.5" value="${log.weight || ''}" placeholder="BW" id="weight_${logKey}" style="width:70px">
+          </div>
+          <div>
+            <div class="mini-label">Séries OK</div>
+            <input class="mini-input" type="number" min="0" max="10" value="${log.sets || ''}" placeholder="${setsNum}" id="sets_${logKey}" style="width:60px">
+          </div>
+          <button class="save-btn ${log.saved ? 'saved' : ''}" onclick="logExercise('${logKey}')" id="savebtn_${logKey}">
+            ${log.saved ? '✓ Sauvé' : 'Sauver'}
+          </button>
+        </div>
+        ${log.saved ? `<div style="font-size:11px; color:var(--success); margin-top:6px">✓ ${log.reps} reps ${log.weight ? '@ '+log.weight+'kg' : '(poids corps)'} × ${log.sets || setsNum} séries</div>` : ''}
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function logExercise(key) {
+  const reps = document.getElementById('reps_' + key)?.value;
+  const weight = document.getElementById('weight_' + key)?.value;
+  const sets = document.getElementById('sets_' + key)?.value;
+  state.logs[key] = { reps, weight, sets, saved: true, date: new Date().toLocaleDateString('fr') };
+  saveState();
+  const btn = document.getElementById('savebtn_' + key);
+  if (btn) { btn.textContent = '✓ Sauvé'; btn.classList.add('saved'); }
+  renderWorkout();
+}
+
+// ===================== WEEK PROGRESS =====================
+function renderWeekProgress() {
+  const container = document.getElementById('weekProgressBars');
+  if (!container) return;
+  let html = '';
+  program.phases.forEach(phase => {
+    html += `<div style="margin-bottom:14px">`;
+    html += `<div style="font-size:11px; letter-spacing:2px; text-transform:uppercase; color:${phase.color}; margin-bottom:6px">${phase.name}</div>`;
+    phase.weeks.forEach(w => {
+      const logsCount = Object.keys(state.logs).filter(k => k.startsWith(`S${w}_`)).length;
+      const pct = Math.min(100, Math.round((logsCount / 28) * 100));
+      html += `
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px">
+          <div style="width:24px; font-family:'Courier New','Menlo',monospace; font-size:11px; color:var(--text-muted)">S${w}</div>
+          <div style="flex:1">
+            <div class="prog-bar-wrap">
+              <div class="prog-bar" style="width:${pct}%; background:${phase.color}"></div>
+            </div>
+          </div>
+          <div style="width:30px; font-family:'Courier New','Menlo',monospace; font-size:10px; color:${phase.color}; text-align:right">${pct}%</div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  });
+  container.innerHTML = html;
+}
+
+// ===================== PERFORMANCE TRACKERS =====================
+function renderPerfTracker(containerId, stateKey, label, placeholder) {
+  const c = document.getElementById(containerId);
+  if (!c) return;
+  const data = state[stateKey] || [];
+  const lastVal = data.length ? data[data.length-1].val : '?';
+  const firstVal = data.length ? data[0].val : '?';
+
+  let html = `
+    <div style="display:flex; align-items:center; gap:16px; margin-bottom:10px">
+      <div style="text-align:center">
+        <div style="font-family:'Impact','Arial Narrow','Helvetica Neue',Arial,sans-serif;font-weight:900; font-size:40px; color:var(--accent)">${lastVal}</div>
+        <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px">Actuel</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-family:'Impact','Arial Narrow','Helvetica Neue',Arial,sans-serif;font-weight:900; font-size:40px; color:var(--text-muted)">${firstVal}</div>
+        <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px">Départ</div>
+      </div>
+      ${data.length > 1 ? `<div style="text-align:center">
+        <div style="font-family:'Impact','Arial Narrow','Helvetica Neue',Arial,sans-serif;font-weight:900; font-size:40px; color:var(--success)">+${lastVal - firstVal}</div>
+        <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px">Gain</div>
+      </div>` : ''}
+    </div>
+    <div class="input-row">
+      <input class="mini-input" type="number" id="perf_${stateKey}" placeholder="${placeholder}" style="width:80px">
+      <button class="save-btn" onclick="logPerf('${stateKey}')">+ Ajouter</button>
+    </div>
+    <div style="margin-top:10px; font-size:12px; color:var(--text-muted)">
+  `;
+  data.slice(-5).reverse().forEach(d => {
+    html += `<div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid var(--border)">
+      <span>${d.date}</span><span style="font-family:'Courier New','Menlo',monospace; color:var(--accent)">${d.val} reps</span>
+    </div>`;
+  });
+  html += `</div>`;
+  c.innerHTML = html;
+}
+
+function logPerf(key) {
+  const val = parseInt(document.getElementById('perf_' + key)?.value);
+  if (isNaN(val)) return;
+  if (!state[key]) state[key] = [];
+  state[key].push({ val, date: new Date().toLocaleDateString('fr') });
+  saveState();
+  renderPerformances();
+}
+
+function renderPerformances() {
+  renderPerfTracker('pullupTracker', 'pullups', 'Tractions', 'Reps');
+  renderPerfTracker('dipsTracker', 'dips', 'Dips', 'Reps');
+  renderPerfTracker('pushupsTracker', 'pushups', 'Pompes', 'Reps');
+  renderMorpho();
+}
+
+function renderMorpho() {
+  const c = document.getElementById('morphoTracker');
+  if (!c) return;
+  const data = state.morpho || [];
+  const last = data.length ? data[data.length - 1] : {};
+  
+  let html = `
+    <div class="macro-grid" style="margin-bottom:14px">
+      <div class="macro-box">
+        <div class="macro-val" style="font-size:22px; color:var(--accent)">${last.weight || '—'}</div>
+        <div class="macro-lbl">kg</div>
+      </div>
+      <div class="macro-box">
+        <div class="macro-val" style="font-size:22px; color:var(--accent2)">${last.waist || '—'}</div>
+        <div class="macro-lbl">Tour taille</div>
+      </div>
+      <div class="macro-box">
+        <div class="macro-val" style="font-size:22px; color:var(--accent3)">${last.chest || '—'}</div>
+        <div class="macro-lbl">Poitrine</div>
+      </div>
+      <div class="macro-box">
+        <div class="macro-val" style="font-size:22px; color:var(--success)">${last.arm || '—'}</div>
+        <div class="macro-lbl">Bras (cm)</div>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px">
+      <div><div class="mini-label">Poids (kg)</div><input class="mini-input" id="morph_weight" placeholder="91" style="width:100%"></div>
+      <div><div class="mini-label">Tour taille (cm)</div><input class="mini-input" id="morph_waist" placeholder="92" style="width:100%"></div>
+      <div><div class="mini-label">Poitrine (cm)</div><input class="mini-input" id="morph_chest" placeholder="105" style="width:100%"></div>
+      <div><div class="mini-label">Bras (cm)</div><input class="mini-input" id="morph_arm" placeholder="36" style="width:100%"></div>
+    </div>
+    <button class="save-btn" onclick="logMorpho()">Enregistrer mensurations</button>
+    <div style="margin-top:12px; font-size:12px; color:var(--text-muted)">
+  `;
+  
+  data.slice(-4).reverse().forEach(d => {
+    html += `<div style="padding:5px 0; border-bottom:1px solid var(--border)">
+      <div style="color:var(--text-dim); font-size:11px; margin-bottom:2px">${d.date}</div>
+      <div style="display:flex; gap:14px; flex-wrap:wrap">
+        ${d.weight ? `<span>${d.weight}kg</span>` : ''}
+        ${d.waist ? `<span>Taille: ${d.waist}cm</span>` : ''}
+        ${d.chest ? `<span>Pecs: ${d.chest}cm</span>` : ''}
+        ${d.arm ? `<span>Bras: ${d.arm}cm</span>` : ''}
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+  c.innerHTML = html;
+}
+
+function logMorpho() {
+  const entry = {
+    date: new Date().toLocaleDateString('fr'),
+    weight: document.getElementById('morph_weight')?.value,
+    waist: document.getElementById('morph_waist')?.value,
+    chest: document.getElementById('morph_chest')?.value,
+    arm: document.getElementById('morph_arm')?.value,
+  };
+  if (!state.morpho) state.morpho = [];
+  state.morpho.push(entry);
+  // update dashboard stat
+  if (entry.weight) document.getElementById('dash-weight').textContent = entry.weight;
+  saveState();
+  renderMorpho();
+}
+
+// ===================== TIMER =====================
+let timerVal = 90, timerRunning = false, timerInterval = null;
+
+function formatTime(s) {
+  const m = Math.floor(s / 60).toString().padStart(2, '0');
+  const sec = (s % 60).toString().padStart(2, '0');
+  return m + ':' + sec;
+}
+
+function setTimer(s) { 
+  pauseTimer();
+  timerVal = s;
+  document.getElementById('timerDisplay').textContent = formatTime(s);
+}
+
+function startTimer() {
+  if (timerRunning) return;
+  timerRunning = true;
+  timerInterval = setInterval(() => {
+    timerVal--;
+    document.getElementById('timerDisplay').textContent = formatTime(timerVal);
+    if (timerVal <= 0) {
+      pauseTimer();
+      document.getElementById('timerDisplay').textContent = 'GO ! 💪';
+    }
+  }, 1000);
+}
+
+function pauseTimer() {
+  timerRunning = false;
+  clearInterval(timerInterval);
+}
+
+function resetTimer() {
+  pauseTimer();
+  timerVal = 90;
+  document.getElementById('timerDisplay').textContent = formatTime(90);
+}
+
+// ===================== SESSIONS COUNTER =====================
+function updateSessionsCount() {
+  const thisWeek = Object.keys(state.logs).filter(k => k.startsWith(`S${state.currentWeek}_`));
+  const days = new Set(thisWeek.map(k => k.split('_')[1]));
+  const el = document.getElementById('dash-sessions');
+  if (el) el.textContent = days.size;
+}
+
+// ===================== INIT =====================
+function init() {
+  loadState();
+  renderWeekGrid();
+  renderDayRow();
+  renderWorkout();
+  renderWeekProgress();
+  renderPerformances();
+  updateSessionsCount();
+  document.getElementById('headerWeek').textContent = `S${state.currentWeek} — ${state.currentDay.split(' ')[0]}`;
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
